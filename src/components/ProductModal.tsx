@@ -81,7 +81,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
           </div>
 
           <a
-            href="tel:+77479481318"
+            href="tel:+77752400997"
             className="flex items-center justify-center gap-3 w-full gradient-primary text-primary-foreground py-4 rounded-2xl font-semibold text-lg shadow-card hover:shadow-elevated transition-all duration-300 hover:-translate-y-1"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,7 +91,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
           </a>
 
           <p className="text-center text-sm text-muted-foreground">
-            +7 747 948 13 18
+            +7 775 240 09 97
           </p>
         </div>
       </div>
