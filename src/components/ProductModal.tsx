@@ -91,7 +91,7 @@ const ProductModal = ({ product, onClose }: ProductModalProps) => {
           </a>
 
           <p className="text-center text-sm text-muted-foreground">
-            +7 747 948 13 18
+            +7 775 240 09 97
           </p>
         </div>
       </div>
