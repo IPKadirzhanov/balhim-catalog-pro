@@ -3,6 +3,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
+const CATEGORIES = [
+  "Для кухни",
+  "Для мебели",
+  "Для одежды",
+  "Салфетки",
+  "Пакеты",
+  "Рабочие перчатки",
+  "Другое",
+];
+
 interface AdminPanelProps {
   onClose: () => void;
 }
@@ -10,7 +20,7 @@ interface AdminPanelProps {
 const AdminPanel = ({ onClose }: AdminPanelProps) => {
   const queryClient = useQueryClient();
   const [editingProduct, setEditingProduct] = useState<Tables<"products"> | null>(null);
-  const [formData, setFormData] = useState({ name: "", description: "", price: "" });
+  const [formData, setFormData] = useState({ name: "", description: "", price: "", category: "Другое" });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [showForm, setShowForm] = useState(false);
 
@@ -39,24 +49,19 @@ const AdminPanel = ({ onClose }: AdminPanelProps) => {
         imageUrl = await uploadImage(imageFile);
       }
 
+      const payload = {
+        name: formData.name,
+        description: formData.description,
+        price: Number(formData.price),
+        image: imageUrl,
+        category: formData.category,
+      };
+
       if (editingProduct) {
-        const { error } = await supabase
-          .from("products")
-          .update({
-            name: formData.name,
-            description: formData.description,
-            price: Number(formData.price),
-            image: imageUrl,
-          })
-          .eq("id", editingProduct.id);
+        const { error } = await supabase.from("products").update(payload).eq("id", editingProduct.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("products").insert({
-          name: formData.name,
-          description: formData.description,
-          price: Number(formData.price),
-          image: imageUrl,
-        });
+        const { error } = await supabase.from("products").insert(payload);
         if (error) throw error;
       }
     },
@@ -75,7 +80,7 @@ const AdminPanel = ({ onClose }: AdminPanelProps) => {
   });
 
   const resetForm = () => {
-    setFormData({ name: "", description: "", price: "" });
+    setFormData({ name: "", description: "", price: "", category: "Другое" });
     setImageFile(null);
     setEditingProduct(null);
     setShowForm(false);
@@ -87,6 +92,7 @@ const AdminPanel = ({ onClose }: AdminPanelProps) => {
       name: product.name,
       description: product.description || "",
       price: String(product.price),
+      category: (product as any).category || "Другое",
     });
     setShowForm(true);
   };
@@ -104,7 +110,7 @@ const AdminPanel = ({ onClose }: AdminPanelProps) => {
           </h1>
           <div className="flex gap-3">
             <button
-              onClick={() => { setShowForm(true); setEditingProduct(null); setFormData({ name: "", description: "", price: "" }); }}
+              onClick={() => { setShowForm(true); setEditingProduct(null); setFormData({ name: "", description: "", price: "", category: "Другое" }); }}
               className="gradient-primary text-primary-foreground px-6 py-2.5 rounded-xl font-semibold text-sm hover:shadow-card transition-all"
             >
               + Добавить товар
@@ -124,7 +130,7 @@ const AdminPanel = ({ onClose }: AdminPanelProps) => {
             <h2 className="font-bold text-lg text-foreground">
               {editingProduct ? "Редактировать товар" : "Новый товар"}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <input
                 placeholder="Название"
                 value={formData.name}
@@ -138,6 +144,15 @@ const AdminPanel = ({ onClose }: AdminPanelProps) => {
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 className="px-4 py-3 rounded-xl border border-border bg-secondary text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               />
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                className="px-4 py-3 rounded-xl border border-border bg-secondary text-foreground focus:outline-none focus:ring-2 focus:ring-primary appearance-none"
+              >
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
             </div>
             <textarea
               placeholder="Описание"
@@ -181,6 +196,7 @@ const AdminPanel = ({ onClose }: AdminPanelProps) => {
                   <tr className="border-b border-border bg-secondary">
                     <th className="text-left px-6 py-4 text-sm font-semibold text-muted-foreground">Фото</th>
                     <th className="text-left px-6 py-4 text-sm font-semibold text-muted-foreground">Название</th>
+                    <th className="text-left px-6 py-4 text-sm font-semibold text-muted-foreground">Категория</th>
                     <th className="text-left px-6 py-4 text-sm font-semibold text-muted-foreground">Цена</th>
                     <th className="text-right px-6 py-4 text-sm font-semibold text-muted-foreground">Действия</th>
                   </tr>
@@ -196,6 +212,11 @@ const AdminPanel = ({ onClose }: AdminPanelProps) => {
                         )}
                       </td>
                       <td className="px-6 py-4 font-medium text-foreground">{product.name}</td>
+                      <td className="px-6 py-4">
+                        <span className="text-xs font-medium bg-primary/10 text-primary px-3 py-1 rounded-full">
+                          {(product as any).category || "Другое"}
+                        </span>
+                      </td>
                       <td className="px-6 py-4 text-muted-foreground">{formatPrice(product.price)}</td>
                       <td className="px-6 py-4 text-right space-x-2">
                         <button
