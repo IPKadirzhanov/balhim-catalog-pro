@@ -1,3 +1,5 @@
+import Map2GIS from "./Map2GIS";
+
 const ContactSection = () => {
   return (
     <section className="py-20 bg-secondary relative overflow-hidden">
@@ -62,15 +64,7 @@ const ContactSection = () => {
 
           {/* Map */}
           <div className="rounded-2xl overflow-hidden shadow-card h-80 lg:h-full min-h-[320px]">
-            <iframe
-              src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A43.284431%2C%22lon%22%3A76.889361%2C%22zoom%22%3A16%7D%2C%22opt%22%3A%7B%22city%22%3A%22almaty%22%7D%2C%22org%22%3A%2270000001019528816%22%7D"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              title="BalHim на карте 2ГИС"
-            />
+            <Map2GIS />
           </div>
         </div>
       </div>
