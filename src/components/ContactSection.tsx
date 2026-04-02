@@ -63,14 +63,13 @@ const ContactSection = () => {
           {/* Map */}
           <div className="rounded-2xl overflow-hidden shadow-card h-80 lg:h-full min-h-[320px]">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2906.3!2d76.889331!3d43.284526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zQWxtYXR5!5e0!3m2!1sru!2skz!4v1"
+              src="https://widgets.2gis.com/widget?type=firmsonmap&options=%7B%22pos%22%3A%7B%22lat%22%3A43.284431%2C%22lon%22%3A76.889361%2C%22zoom%22%3A16%7D%2C%22opt%22%3A%7B%22city%22%3A%22almaty%22%7D%2C%22org%22%3A%2270000001019528816%22%7D"
               width="100%"
               height="100%"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="BalHim на карте"
+              title="BalHim на карте 2ГИС"
             />
           </div>
         </div>
